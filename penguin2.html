@@ -58,25 +58,38 @@
         // Enable dynamic resizing of the map, based on the current size of the enclosing cntainer
         window.addEventListener('resize', () => map.getViewPort().resize());
     
-        // Create the coordinates for the Westgate Mall
-        const spireCoordinates = {
-            lat: -1.2568028,
-            lng: 36.8032833
-        };
+        
+        function addMarkerToGroup(group, coordinate, html) {
+            var marker = new H.map.Marker(coordinate);
+            // add custom data to the marker
+            marker.setData(html);
+            group.addObject(marker);
+            }
+        
+        function addInfoBubble(map) {
+            var group = new H.map.Group();
 
-        // Create the HTML content for the info bubble
-        const content = '<div>' +
-            '<h3>Westgate Mall</h3>' +
-            '<p>Learn more on <a href="https://en.wikipedia.org/wiki/Spire_of_Dublin" target="_blank">Wikipedia</a>.</p>' +
-            '</div>';
+            map.addObject(group);
 
-        // Create an info bubble at the Spire of Dublin location with the HTML content
-        const infoBubble = new H.ui.InfoBubble(spireCoordinates, {
-            content
-        });
+            // add 'tap' event listener, that opens info bubble, to the group
+            group.addEventListener('tap', function (evt) {
+                // event target is the marker itself, group is a parent event target
+                // for all objects that it contains
+                var bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
+                // read custom data
+                content: evt.target.getData()
+                });
+                // show info bubble
+                ui.addBubble(bubble);
+            }, false);
 
+            addMarkerToGroup(group, {lat: -1.2568028, lng: 36.8032833},
+                '<div><a href="https://www.westgate.co.ke/" target="_blank">Westgate Mall</a></div>' +
+                '<div>Westlands road<br />Floor area: 55,097</div>');
+
+        }
         // Add the info bubble to the UI
-        ui.addBubble(infoBubble);
+        addInfoBubble(map);
 
     </script>
 
