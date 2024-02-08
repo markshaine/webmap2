@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+    <script type="text/javascript" charset="utf-8" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" ></script>
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+
+    <style>
+        body {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+    }
+    #map {
+        position:absolute;
+        top:0;
+        bottom:0;
+        width:100%;
+        height: 100%;
+    }
+
+    </style>
+  </head>
+<body>
+    <div id="map"></div>
+    <script>
+      // Initiate and authenticate your connection to the HERE platform:
+        const platform = new H.service.Platform({
+            'apikey': 'fEvKIU3vbBfDBllEZlHwCOz0FjO9tRAvZVb_7IU40MQ'
+        });
+
+        // Obtain the default map types from the platform object:
+        const defaultLayers = platform.createDefaultLayers();
+
+        // Instantiate (and display) a map:
+        const map = new H.Map(
+            document.getElementById("map"),
+            // Center the map on Nairobi, Republic of Kenya, with the zoom level of 10:
+            defaultLayers.vector.normal.map, {
+                zoom: 11,
+                center: {
+                    lat: -1.286389,
+                    lng: 36.817223
+                }
+            });
+            // Create the default UI:
+            const ui = H.ui.UI.createDefault(map, defaultLayers);
+
+        // MapEvents enables the event system.
+        // The behavior variable implements default interactions for pan/zoom (also on mobile touch environments).
+        const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+        // Enable dynamic resizing of the map, based on the current size of the enclosing cntainer
+        window.addEventListener('resize', () => map.getViewPort().resize());
+    
+        // Create the coordinates for the Westgate Mall
+        const spireCoordinates = {
+            lat: -1.2568028,
+            lng: 36.8032833
+        };
+
+        // Create the HTML content for the info bubble
+        const content = '<div>' +
+            '<h3>Westgate Mall</h3>' +
+            '<p>Learn more on <a href="https://en.wikipedia.org/wiki/Spire_of_Dublin" target="_blank">Wikipedia</a>.</p>' +
+            '</div>';
+
+        // Create an info bubble at the Spire of Dublin location with the HTML content
+        const infoBubble = new H.ui.InfoBubble(spireCoordinates, {
+            content
+        });
+
+        // Add the info bubble to the UI
+        ui.addBubble(infoBubble);
+
+    </script>
+
+</body>
+</html>  
